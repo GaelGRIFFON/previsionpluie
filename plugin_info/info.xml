@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<info>
+    <id>previsionpluie</id>
+    <name>Prévision pluie à 1H</name>
+    <description>Plugin permettant de disposer de la prévision pluie à 1H de Météo France</description>
+    <icon>fa fa-umbrella</icon>
+    <licence>AGPL</licence>
+    <author>Gaël GRIFFON</author>
+    <installation>Aucune</installation>
+    <require>1.150</require>
+    <version>0.1</version>
+    <category>weather</category>
+</info>
