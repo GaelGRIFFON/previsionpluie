@@ -1,0 +1,6 @@
+==== Ma ville n'apparait pas
+Essayer de la trouver par son code postale.
+Si elle n'apparait toujours pas, c'est que le service n'est pas couvert sur celle-ci. Voir la carte Météo France de couverture du service.
+
+==== A quelle fréquence les données sont-elles actualisées?
+Toutes les 5 minutes.

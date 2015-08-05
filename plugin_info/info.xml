@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <info>
     <id>previsionpluie</id>
     <name>Prévision pluie à 1H</name>
@@ -8,6 +8,6 @@
     <author>Gaël GRIFFON</author>
     <installation>Aucune</installation>
     <require>1.150</require>
-    <version>0.1</version>
+    <version>0.7.1</version>
     <category>weather</category>
 </info>

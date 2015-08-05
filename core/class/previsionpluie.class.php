@@ -28,14 +28,14 @@ class previsionpluie extends eqLogic {
 			$mc->remove();
 			$mc = cache::byKey('previsionpluieWidgetdashboard' . $previsionpluie->getId());
 			$mc->remove();
-			$previsionpluie->toHtml('mobile');
+			$previsionpluie->toHtml('(1mobile');
 			$previsionpluie->toHtml('dashboard');
 			$previsionpluie->refreshWidget();
 		}
 	}
 
 	public function postUpdate() {
-		log::add('previsionpluie', 'debug', 'postUpdate');
+		//log::add('previsionpluie', 'debug', 'postUpdate');
 		
 		$previsionpluieCmd = $this->getCmd(null, 'prevTexte');
 		if (!is_object($previsionpluieCmd)) {
@@ -63,6 +63,19 @@ class previsionpluie extends eqLogic {
 		$previsionpluieCmd->setIsVisible(1);
 		$previsionpluieCmd->save();
 
+		$previsionpluieCmd = $this->getCmd(null, 'pluieDanslHeure');
+		if (!is_object($previsionpluieCmd)) {
+			$previsionpluieCmd = new previsionpluieCmd();
+		}
+		$previsionpluieCmd->setName(__('Pluie prévue dans l heure', __FILE__));
+		$previsionpluieCmd->setEqLogic_id($this->id);
+		$previsionpluieCmd->setLogicalId('pluieDanslHeure');
+		$previsionpluieCmd->setType('info');
+		$previsionpluieCmd->setSubType('other');
+		$previsionpluieCmd->setEventOnly(1);
+		$previsionpluieCmd->setIsVisible(1);
+		$previsionpluieCmd->save();
+
 		for($i=0; $i <= 11; $i++){
 
 			$previsionpluieCmd = $this->getCmd(null, 'prev' . $i*5);
@@ -75,10 +88,10 @@ class previsionpluie extends eqLogic {
 			$previsionpluieCmd->setType('info');
 			$previsionpluieCmd->setSubType('other');
 			$previsionpluieCmd->setEventOnly(1);
-			$previsionpluieCmd->setIsVisible(1);
+			$previsionpluieCmd->setIsVisible(0);
 			$previsionpluieCmd->save();
 
-			$previsionpluieCmd = $this->getCmd(null, 'prevColor' . $i*5);
+			/*$previsionpluieCmd = $this->getCmd(null, 'prevColor' . $i*5);
 			if (!is_object($previsionpluieCmd)) {
 				$previsionpluieCmd = new previsionpluieCmd();
 			}
@@ -88,7 +101,7 @@ class previsionpluie extends eqLogic {
 			$previsionpluieCmd->setType('info');
 			$previsionpluieCmd->setSubType('other');
 			$previsionpluieCmd->setEventOnly(1);
-			$previsionpluieCmd->setIsVisible(1);
+			$previsionpluieCmd->setIsVisible(0);
 			$previsionpluieCmd->save();
 
 			$previsionpluieCmd = $this->getCmd(null, 'prevText' . $i*5);
@@ -101,13 +114,13 @@ class previsionpluie extends eqLogic {
 			$previsionpluieCmd->setType('info');
 			$previsionpluieCmd->setSubType('other');
 			$previsionpluieCmd->setEventOnly(1);
-			$previsionpluieCmd->setIsVisible(1);
-			$previsionpluieCmd->save();
+			$previsionpluieCmd->setIsVisible(0);
+			$previsionpluieCmd->save();*/
 		}
 	}
 	
 	public function postSave() {
-		log::add('previsionpluie', 'debug', 'postSave');
+		//log::add('previsionpluie', 'debug', 'postSave');
 		
 		foreach (eqLogic::byType('previsionpluie') as $previsionpluie) {
 			$previsionpluie->getInformations();
@@ -130,24 +143,34 @@ class previsionpluie extends eqLogic {
 		);
 		
 		$prevTexte = $this->getCmd(null,'prevTexte');
-		$replace['#prevTexte#'] = (is_object($prevTexte)) ? $prevTexte->execCmd() : '';
+		$replace['#prevTexte#'] = (is_object($prevTexte)) ? nl2br($prevTexte->execCmd()) : '';
 		$replace['#prevTexte_display#'] = (is_object($prevTexte) && $prevTexte->getIsVisible()) ? "#prevTexte_display#" : "none";
 		
 		$lastUpdate = $this->getCmd(null,'lastUpdate');
 		$replace['#lastUpdate#'] = (is_object($lastUpdate)) ? $lastUpdate->execCmd() : '';
 
+		$colors = Array();
+		$color[1] = '#ffffff';
+		$color[2] = '#AAE8FF';
+		$color[3] = '#48BFEA';
+		$color[4] = '#0094CE';
+		
+		$text = Array();
+		$text[1] = '{{Pas de pluie}}';
+		$text[2] = '{{Pluie faible}}';
+		$text[3] = '{{Pluie modérée}}';
+		$text[4] = '{{Pluie forte}}';
+		
 		for($i=0; $i <= 11; $i++){
 			$prev = $this->getCmd(null,'prev' . $i*5);
-			$replace['#prev' . ($i*5) . '#'] = (is_object($prev)) ? $prev->execCmd() : '';
-
-			$prev = $this->getCmd(null,'prevColor' . $i*5);
-			$replace['#prev' . ($i*5) . 'Color#'] = (is_object($prev)) ? '#' . $prev->execCmd() : '#ffffff';
-
-			$prev = $this->getCmd(null,'prevText' . $i*5);
-			$replace['#prev' . ($i*5) . 'Text#'] = (is_object($prev)) ? $prev->execCmd() : 'Indéterminé';
+			if(is_object($prev)){
+				$prevision = $prev->execCmd();
+				$replace['#prev' . ($i*5) . '#'] = $prevision;
+				$replace['#prev' . ($i*5) . 'Color#'] = $color[$prevision];
+				$replace['#prev' . ($i*5) . 'Text#'] = $text[$prevision];
+			}
 		}
-
-
+		
 		$parameters = $this->getDisplay('parameters');
         if (is_array($parameters)) {
             foreach ($parameters as $key => $value) {
@@ -161,45 +184,57 @@ class previsionpluie extends eqLogic {
 	}
 
     public function getInformations() {
-    	$prevPluieJson = file_get_contents('http://www.meteofrance.com/mf3-rpc-portlet/rest/pluie/' . $this->getConfiguration('ville')); 
-		$prevPluieData = json_decode($prevPluieJson, true); 
+    	//log::add('previsionpluie', 'debug', 'getInformation: go');
 
-    	$prevTexte = "";
-    	foreach($prevPluieData['niveauPluieText'] as $prevTexteItem){
-    		$prevTexte .= '<br>' . $prevTexteItem;
-    	}
+    	if($this->getConfiguration('ville') != ''){
 
-    	log::add('previsionpluie', 'debug', 'DataCadran: ' . $prevPluieData['dataCadran'][0]['niveauPluie']);
+    		//log::add('previsionpluie', 'debug', 'getInformation: ' .$this->getConfiguration('ville') );
 
-		$prevTexteCmd = $this->getCmd(null,'prevTexte');
-			if(is_object($prevTexteCmd)){
-				log::add('previsionpluie', 'debug', 'prevTexte: ' . $prevTexte);
-				$prevTexteCmd->event($prevTexte);
-			}
+	    	$prevPluieJson = file_get_contents('http://www.meteofrance.com/mf3-rpc-portlet/rest/pluie/' . $this->getConfiguration('ville')); 
+			$prevPluieData = json_decode($prevPluieJson, true); 
 
-		$lastUpdateCmd = $this->getCmd(null,'lastUpdate');
-			if(is_object($lastUpdateCmd)){
-				log::add('previsionpluie', 'debug', 'lastUpdate: ' . $prevPluieData['lastUpdate']);
-				$lastUpdateCmd->event($prevPluieData['lastUpdate']);
-			}
+			//log::add('previsionpluie', 'debug', 'getInformation: length ' . count($prevPluieData));
+			
+			if(count($prevPluieData) > 0){
 
-		for($i=0; $i <= 11; $i++){
-			$prevCmd = $this->getCmd(null,'prev' . $i*5);
-			if(is_object($prevCmd)){
-				log::add('previsionpluie', 'debug', 'prev' . $i*5 . ': ' . $prevPluieData['dataCadran'][$i]['niveauPluie']);
-				$prevCmd->event($prevPluieData['dataCadran'][$i]['niveauPluie']);
-			}
+		    	$prevTexte = "";
+		    	foreach($prevPluieData['niveauPluieText'] as $prevTexteItem){
+		    		$prevTexte .= substr_replace($prevTexteItem," ",2,0) . "\n";
+		    		//log::add('previsionpluie', 'debug', 'prevTexteItem: ' . $prevTexteItem);
+		    	}
 
-			$prevCmd = $this->getCmd(null,'prevColor' . $i*5);
-			if(is_object($prevCmd)){
-				log::add('previsionpluie', 'debug', 'prevColor' . $i*5 . ': ' . $prevPluieData['dataCadran'][$i]['color']);
-				$prevCmd->event($prevPluieData['dataCadran'][$i]['color']);
-			}
+				$prevTexteCmd = $this->getCmd(null,'prevTexte');
+					if(is_object($prevTexteCmd)){
+						//log::add('previsionpluie', 'debug', 'prevTexte: ' . $prevTexte);
+						$prevTexteCmd->event($prevTexte);
+					}
 
-			$prevCmd = $this->getCmd(null,'prevText' . $i*5);
-			if(is_object($prevCmd)){
-				log::add('previsionpluie', 'debug', 'prevText' . $i*5 . ': ' . $prevPluieData['dataCadran'][$i]['niveauPluieText']);
-				$prevCmd->event($prevPluieData['dataCadran'][$i]['niveauPluieText']);
+				$lastUpdateCmd = $this->getCmd(null,'lastUpdate');
+					if(is_object($lastUpdateCmd)){
+						//log::add('previsionpluie', 'debug', 'lastUpdate: ' . $prevPluieData['lastUpdate']);
+						$lastUpdateCmd->event($prevPluieData['lastUpdate']);
+					}
+
+				$pluieDanslHeureCount = 0;
+
+				for($i=0; $i <= 11; $i++){
+					$prevCmd = $this->getCmd(null,'prev' . $i*5);
+					if(is_object($prevCmd)){
+						//log::add('previsionpluie', 'debug', 'prev' . $i*5 . ': ' . $prevPluieData['dataCadran'][$i]['niveauPluie']);
+						if($prevCmd->execCmd() != $prevPluieData['dataCadran'][$i]['niveauPluie']){
+							$prevCmd->event($prevPluieData['dataCadran'][$i]['niveauPluie']);
+						}
+						$pluieDanslHeureCount = $pluieDanslHeureCount + $prevPluieData['dataCadran'][$i]['niveauPluie'];
+					}
+				}
+
+				$pluieDanslHeure = $this->getCmd(null,'pluieDanslHeure');
+					if(is_object($pluieDanslHeure)){
+						//log::add('previsionpluie', 'debug', 'pluieDanslHeure: ' . $pluieDanslHeureCount);
+						$pluieDanslHeure->event($pluieDanslHeureCount);
+					}
+			}else{
+				log::add('previsionpluie', 'error', 'Impossible d\'obtenir les informations Météo France...');
 			}
 		}
 	}

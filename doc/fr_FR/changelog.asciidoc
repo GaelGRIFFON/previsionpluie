@@ -1,0 +1,8 @@
+==== 0.6 - 21/03/2015
+- Correction d'un bug
+
+==== 0.5 - 21/03/2015
+- Amélioration de la présentation texte (pour compatibilité avec Imperihome)
+
+==== 0.4 - 21/03/2015
+- Dernière version Bêta dispo: candidate pour Stable

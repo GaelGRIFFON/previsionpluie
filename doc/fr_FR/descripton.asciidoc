@@ -1,0 +1,16 @@
+Le plugin permet de récupérer les données de Météo France pour la prévision pluie à 1H.
+
+La couverture de ce service n'est pas disponible sur toute la France en raison des reliefs, voici la carte de couveture Météo France:
+image::../images/carte-couverture-du-service.jpg[Carte de couverture du service de prévision pluie à 1H Météo France]
+
+Le plugin affiche une barre d'une durée de 1H, qui présente la prévision de pluie par tranche de 5 minutes.
+Les prévisions possibles sont:
+* Pas de pluie
+* Pluie Faible
+* Pluie Modérée
+* Pluie Forte
+
+Il est possible d'obtenir la prévision potentielle de pluie dans l'heure à travers la commande "Pluie prévue dans l heure".
+Celle-ci est de type numérique et représente une probabilité globale de pluie dans l'heure.
+Si celle-ci est inférieure ou égale à 12, alors il n'y a pas de pluie prévue dans l'heure.
+Puis, plus la valeur augmente, plus la probabilité de pluie (et la quantité) augmente. La valeur maximale est de 48 (1H de pluie forte).

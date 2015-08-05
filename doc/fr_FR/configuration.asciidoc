@@ -1,0 +1,8 @@
+Pour commmencer, ajouter un équipement.
+
+Renseigner le nom souhaité, sélectionner l'objet parent, la catégorie, et cocher Activer et Visible.
+
+Puis il faut renseigner la ville, pour cela, cliquer sur le bouton "Trouver la ville".
+Dans la fenêtre qui s'ouvre, rentrer le nom de la ville (ou les premiers caractères), et cliquer sur la ville qui doit apparaitre en dessous.
+
+Sauvergarder, c'est fini!

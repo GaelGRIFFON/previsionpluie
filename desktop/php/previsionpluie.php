@@ -6,39 +6,59 @@ if (!isConnect('admin')) {
 global $listCmdPrevisionPluie;
 
 sendVarToJS('eqType', 'previsionpluie');
+$eqLogics = eqLogic::byType('previsionpluie');
 
 ?>
 
 <div class="row row-overflow">
-    <div class="col-lg-2">
+    <div class="col-lg-2 col-md-3 col-sm-4">
         <div class="bs-sidebar">
             <ul id="ul_eqLogic" class="nav nav-list bs-sidenav">
-                <a class="btn btn-default eqLogicAction" style="width : 100%;margin-top : 5px;margin-bottom: 5px;" data-action="add"><i class="fa fa-plus-circle"></i> {{Ajouter un équipement}}</a>
+                <a class="btn btn-default eqLogicAction" style="width : 100%;margin-top : 5px;margin-bottom: 5px;" data-action="add"><i class="fa fa-plus-circle"></i> {{Ajouter une prévision}}</a>
                 <li class="filter" style="margin-bottom: 5px;"><input class="filter form-control input-sm" placeholder="{{Rechercher}}" style="width: 100%"/></li>
                 <?php
-                foreach (eqLogic::byType('previsionpluie') as $eqLogic) {
-                    echo '<li class="cursor li_eqLogic" data-eqLogic_id="' . $eqLogic->getId() . '"><a>' . $eqLogic->getHumanName() . '</a></li>';
+                foreach ($eqLogics as $eqLogic) {
+                    echo '<li class="cursor li_eqLogic" data-eqLogic_id="' . $eqLogic->getId() . '"><a>' . $eqLogic->getHumanName(true,true) . '</a></li>';
                 }
                 ?>
             </ul>
         </div>
     </div>
+   <div class="col-lg-10 col-md-9 col-sm-8 eqLogicThumbnailDisplay" style="border-left: solid 1px #EEE; padding-left: 25px;">
+        <legend>{{Mes Prévisions de Pluie}}
+        </legend>
+        <?php
+        if (count($eqLogics) == 0) {
+            echo "<br/><br/><br/><center><span style='color:#767676;font-size:1.2em;font-weight: bold;'>{{Vous n'avez pas encore de prévisions de pluie, cliquez sur Ajouter une prévision pour commencer}}</span></center>";
+        } else {
+            ?>
+            <div class="eqLogicThumbnailContainer">
+                <?php
+                foreach ($eqLogics as $eqLogic) {
+                    echo '<div class="eqLogicDisplayCard cursor" data-eqLogic_id="' . $eqLogic->getId() . '" style="background-color : #ffffff; height : 200px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;" >';
+                    echo "<center>";
+                    echo '<img src="plugins/previsionpluie/doc/images/previsionpluie_icon.png" height="105" width="95" />';
+                    echo "</center>";
+                    echo '<span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;"><center>' . $eqLogic->getHumanName(true, true) . '</center></span>';
+                    echo '</div>';
+                }
+                ?>
+            </div>
+        <?php } ?>
+    </div>
     <div class="col-lg-10 eqLogic" style="border-left: solid 1px #EEE; padding-left: 25px;display: none;">
-       <div class="row">
-            <div class="col-lg-8">
- 
-	<form class="form-horizontal">
+   <form class="form-horizontal">
             <fieldset>
-                <legend>{{Général}}</legend>
+                <legend><i class="fa fa-arrow-circle-left eqLogicAction cursor" data-action="returnToThumbnailDisplay"></i> {{Général}}<i class='fa fa-cogs eqLogicAction pull-right cursor expertModeVisible' data-action='configure'></i></legend>
                 <div class="form-group">
-                    <label class="col-lg-4 control-label">{{Nom de l'équipement Prévision Pluie}}</label>
+                    <label class="col-lg-2 control-label">{{Nom de l'équipement Prévision Pluie}}</label>
                     <div class="col-lg-3">
                         <input type="text" class="eqLogicAttr form-control" data-l1key="id" style="display : none;" />
                         <input type="text" class="eqLogicAttr form-control" data-l1key="name" placeholder="{{Nom de l'équipement Prévision Pluie}}"/>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-lg-4 control-label" >{{Objet parent}}</label>
+                    <label class="col-lg-2 control-label" >{{Objet parent}}</label>
                     <div class="col-lg-3">
                         <select id="sel_object" class="eqLogicAttr form-control" data-l1key="object_id">
                             <option value="">{{Aucun}}</option>
@@ -51,7 +71,7 @@ sendVarToJS('eqType', 'previsionpluie');
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-lg-4 control-label">{{Catégorie}}</label>
+                    <label class="col-lg-2 control-label">{{Catégorie}}</label>
                     <div class="col-lg-8">
                         <?php
                         foreach (jeedom::getConfiguration('eqLogic:category') as $key => $value) {
@@ -64,17 +84,17 @@ sendVarToJS('eqType', 'previsionpluie');
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-lg-4 control-label" >{{Activer}}</label>
+                    <label class="col-lg-2 control-label" >{{Activer}}</label>
                     <div class="col-lg-1">
                         <input type="checkbox" class="eqLogicAttr" data-l1key="isEnable" checked/>
                     </div>
-                    <label class="col-lg-4 control-label" >{{Visible}}</label>
+                    <label class="col-lg-2 control-label" >{{Visible}}</label>
                     <div class="col-lg-1">
                         <input type="checkbox" class="eqLogicAttr" data-l1key="isVisible" checked/>
                     </div>
-				</div>
+            </div>
                 <div class="form-group">
-                    <label class="col-lg-4 control-label" >{{Ville}}</label>
+                    <label class="col-lg-2 control-label" >{{Ville}}</label>
                     <div class="col-lg-2">
                         <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="villeNom" type="text" placeholder="{{Ville}}" id="mfVilleNom" disabled>
                     </div>
@@ -87,24 +107,14 @@ sendVarToJS('eqType', 'previsionpluie');
                 </div>
             </fieldset> 
         </form>
-            </div>
-            <div class="col-lg-4">
-                <form class="form-horizontal">
-                    <fieldset>
-                        <legend>{{Informations}}</legend>
-
-                    </fieldset> 
-                </form>
-            </div>
-        </div>
-        <legend>Commandes</legend>
-        <table id="table_cmd" class="table table-bordered table-condensed">
+        <legend style="display: none">Commandes</legend>
+        <table id="table_cmd" class="table table-bordered table-condensed" style="display: none">
             <thead>
                 <tr>
                     <th style="width: 5%;">{{Id}}</th>
-					<th style="width: 25%;">{{Nom}}</th>
-					<th style="width: 60%;">{{Valeur}}</th>
-					<th style="width: 10%;">{{Afficher}}</th>
+               <th style="width: 25%;">{{Nom}}</th>
+               <th style="width: 60%;">{{Valeur}}</th>
+               <th style="width: 10%;">{{Afficher}}</th>
                 </tr>
             </thead>
             <tbody>
