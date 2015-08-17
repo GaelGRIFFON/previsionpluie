@@ -33,10 +33,8 @@ function addCmdToTable(_cmd) {
 	tr += '<input class="cmdAttr form-control input-sm" data-l1key="subtype" value="string" style="display: none">';
 	tr += '<input class="cmdAttr form-control input-sm" data-l1key="name" disabled>';
 	tr += '</td>'; 
-	tr += '<td> Valeur';
-	tr += '</td>';
 	tr += '<td>';
-	tr += '<span><input type="checkbox" class="cmdAttr" data-l1key="isVisible" checked/> {{Afficher}}<br/></span>';
+	tr += '<span><input type="checkbox" class="cmdAttr bootstrapSwitch" data-size="mini" data-label-text="{{Historiser}}" data-l1key="isHistorized"/></span> ';
 	tr += '</td>';
 	tr += '</tr>';
 	$('#table_cmd tbody').append(tr);

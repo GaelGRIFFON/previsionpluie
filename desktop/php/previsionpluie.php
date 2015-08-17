@@ -46,21 +46,25 @@ $eqLogics = eqLogic::byType('previsionpluie');
             </div>
         <?php } ?>
     </div>
-    <div class="col-lg-10 eqLogic" style="border-left: solid 1px #EEE; padding-left: 25px;display: none;">
-   <form class="form-horizontal">
+    <div class="col-lg-10 col-md-9 col-sm-8 eqLogic" style="border-left: solid 1px #EEE; padding-left: 25px;display: none;">
+        <div class="row">
+            <div class="col-sm-12">
+                <form class="form-horizontal">
             <fieldset>
-                <legend><i class="fa fa-arrow-circle-left eqLogicAction cursor" data-action="returnToThumbnailDisplay"></i> {{Général}}<i class='fa fa-cogs eqLogicAction pull-right cursor expertModeVisible' data-action='configure'></i></legend>
+                <legend><i class="fa fa-arrow-circle-left eqLogicAction cursor" data-action="returnToThumbnailDisplay"></i>  {{Général}}
+                <i class='fa fa-cogs eqLogicAction pull-right cursor expertModeVisible' data-action='configure'></i>
+                </legend>
                 <div class="form-group">
-                    <label class="col-lg-2 control-label">{{Nom de l'équipement Prévision Pluie}}</label>
-                    <div class="col-lg-3">
+                    <label class="col-md-2 control-label">{{Nom}}</label>
+                    <div class="col-md-3">
                         <input type="text" class="eqLogicAttr form-control" data-l1key="id" style="display : none;" />
-                        <input type="text" class="eqLogicAttr form-control" data-l1key="name" placeholder="{{Nom de l'équipement Prévision Pluie}}"/>
+                        <input type="text" class="eqLogicAttr form-control" data-l1key="name" placeholder="{{Nom de la prévision}}"/>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-lg-2 control-label" >{{Objet parent}}</label>
-                    <div class="col-lg-3">
-                        <select id="sel_object" class="eqLogicAttr form-control" data-l1key="object_id">
+                    <label class="col-md-2 control-label" >{{Objet parent}}</label>
+                    <div class="col-md-3">
+                        <select class="form-control eqLogicAttr" data-l1key="object_id">
                             <option value="">{{Aucun}}</option>
                             <?php
                             foreach (object::all() as $object) {
@@ -71,8 +75,8 @@ $eqLogics = eqLogic::byType('previsionpluie');
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-lg-2 control-label">{{Catégorie}}</label>
-                    <div class="col-lg-8">
+                    <label class="col-md-2 control-label">{{Catégorie}}</label>
+                    <div class="col-md-8">
                         <?php
                         foreach (jeedom::getConfiguration('eqLogic:category') as $key => $value) {
                             echo '<label class="checkbox-inline">';
@@ -84,15 +88,12 @@ $eqLogics = eqLogic::byType('previsionpluie');
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-lg-2 control-label" >{{Activer}}</label>
-                    <div class="col-lg-1">
-                        <input type="checkbox" class="eqLogicAttr" data-l1key="isEnable" checked/>
-                    </div>
-                    <label class="col-lg-2 control-label" >{{Visible}}</label>
-                    <div class="col-lg-1">
-                        <input type="checkbox" class="eqLogicAttr" data-l1key="isVisible" checked/>
-                    </div>
-            </div>
+                <label class="col-sm-2 control-label" ></label>
+                <div class="col-sm-9">
+                 <input type="checkbox" class="eqLogicAttr bootstrapSwitch" data-label-text="{{Activer}}" data-l1key="isEnable" checked/>
+                  <input type="checkbox" class="eqLogicAttr bootstrapSwitch" data-label-text="{{Visible}}" data-l1key="isVisible" checked/>
+                </div>
+                </div>
                 <div class="form-group">
                     <label class="col-lg-2 control-label" >{{Ville}}</label>
                     <div class="col-lg-2">
@@ -107,13 +108,12 @@ $eqLogics = eqLogic::byType('previsionpluie');
                 </div>
             </fieldset> 
         </form>
-        <legend style="display: none">Commandes</legend>
-        <table id="table_cmd" class="table table-bordered table-condensed" style="display: none">
+        <legend>Commandes</legend>
+        <table id="table_cmd" class="table table-bordered table-condensed">
             <thead>
                 <tr>
                     <th style="width: 5%;">{{Id}}</th>
                <th style="width: 25%;">{{Nom}}</th>
-               <th style="width: 60%;">{{Valeur}}</th>
                <th style="width: 10%;">{{Afficher}}</th>
                 </tr>
             </thead>
